@@ -25,10 +25,15 @@ def setup_shadow():
         os.system("cd shadow; ./setup test")
     
 
-if __name__ == '__main__':
-    setup_shadow()
-    os.system("echo 'export PATH=$PATH:%s' >> ~/.bashrc && . ~/.bashrc" % os.path.expanduser("~/.shadow/bin"))
-
+def setup_bitcoin():
+    if Not os.path.exists("./bitcoin"):
+        os.system("git clone https://github.com/bitcoin/bitcoin.git")
     
+
+if __name__ == '__main__':
+    # setup_shadow()
+    # os.system("echo 'export PATH=$PATH:%s' >> ~/.bashrc && . ~/.bashrc" % os.path.expanduser("~/.shadow/bin"))
+
+    setup_bitcoin()
 
     

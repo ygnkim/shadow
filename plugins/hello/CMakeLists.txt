@@ -9,12 +9,12 @@ endif("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu99")
 
 # should we use our own math functions?
-option (SHADOW_PLUGIN
+option (SHADOW
     "Compile as a shadow plugin" OFF) 
 
-message("SHADOW_PLUGIN:" ${SHADOW_PLUGIN})
+message("SHADOW:" ${SHADOW})
 
-if (${SHADOW_PLUGIN} STREQUAL "ON") 
+if (${SHADOW} STREQUAL "ON") 
   ## we need to know where shadow is installed
   if("${SHADOW_ROOT}" STREQUAL "")
     set(SHADOW_ROOT "$ENV{HOME}/.shadow")
@@ -45,15 +45,14 @@ if (${SHADOW_PLUGIN} STREQUAL "ON")
 
   ## create and install a shared library that can plug into shadow
   add_shadow_plugin(shadow-plugin-hello hello.c)
-  target_link_libraries(shadow-plugin-hello)
+  # target_link_libraries(shadow-plugin-hello)
   install(TARGETS shadow-plugin-hello DESTINATION plugins)
-  # add_executable(hello_plugin hello.c)
-else (${SHADOW_PLUGIN} STREQUAL "ON") 
+else (${SHADOW} STREQUAL "ON") 
     add_executable(hello hello.c)
-endif (${SHADOW_PLUGIN} STREQUAL "ON") 
+endif (${SHADOW} STREQUAL "ON") 
 
-#if (${SHADOW_PLUGIN} STREQUAL "OFF")
+#if (${SHADOW} STREQUAL "OFF")
 ## create and install an executable that can run outside of shadow
 #    add_executable(hello hello.c)
-#endif (${SHADOW_PLUGIN} STREQUAL "NO")
+#endif (${SHADOW} STREQUAL "NO")
 
