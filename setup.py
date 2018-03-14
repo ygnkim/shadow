@@ -26,14 +26,28 @@ def setup_shadow():
     
 
 def setup_bitcoin():
-    if Not os.path.exists("./bitcoin"):
-        os.system("git clone https://github.com/bitcoin/bitcoin.git")
+    bitcoin_path = "plugins/bitcoin/src/bitcoin"
+    if not os.path.exists(bitcoin_path):
+        os.system("mkdir -p %s" % bitcoin_path)
+        os.system("git clone https://github.com/bitcoin/bitcoin.git %s" % bitcoin_path)
     
+    os.system("git -C %s checkout v0.16.0" % bitcoin_path)
+    os.system("git -C %s clean -d -f -x" % bitcoin_path)
+    os.system("cd %s; ./autogen.sh; ./configure --disable-wallet; make -C src obj/build.h; make -C src/secp256k1 src/ecmult_static_context.h"% bitcoin_path)
+    
+
+def compile_bitcoin():
+    build_path = "plugins/bitcoin/build"
+    if not os.path.exists(build_path):
+        os.system("mkdir -p %s" % build_path)
+
+    os.system("cd %s; cmake ../; make" % build_path)
 
 if __name__ == '__main__':
     # setup_shadow()
     # os.system("echo 'export PATH=$PATH:%s' >> ~/.bashrc && . ~/.bashrc" % os.path.expanduser("~/.shadow/bin"))
 
     setup_bitcoin()
+    compile_bitcoin()
 
     
