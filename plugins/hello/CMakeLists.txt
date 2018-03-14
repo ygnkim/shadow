@@ -40,7 +40,6 @@ if (${SHADOW} STREQUAL "ON")
   else()
     message(FATAL_ERROR "CMAKE_MODULE_PATH path does not exist: '${CMAKE_MODULE_PATH}'")
   endif()
-  include_directories(${CMAKE_MODULE_PATH})
   include(ShadowTools)
 
   ## create and install a shared library that can plug into shadow
