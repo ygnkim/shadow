@@ -25,6 +25,13 @@ if(EXISTS "${SHADOW_ROOT}/share/cmake/Modules")
     set(CMAKE_MODULE_PATH "${SHADOW_ROOT}/share/cmake/Modules" ${CMAKE_MODULE_PATH})
 endif()
 
+set(CMAKE_INSTALL_PREFIX "${SHADOW_ROOT}")
+if(EXISTS "${CMAKE_INSTALL_PREFIX}")
+  message(STATUS "CMAKE_INSTALL_PREFIX = ${CMAKE_INSTALL_PREFIX}")
+endif()
+
+include(ShadowTools)
+
 message(STATUS "CMAKE_MODULE_PATH = ${CMAKE_MODULE_PATH}")
 message(STATUS "CMAKE_SOURCE_DIR = ${CMAKE_SOURCE_DIR}")
 message(STATUS "CMAKE_BINARY_DIR = ${CMAKE_BINARY_DIR}")
@@ -211,12 +218,10 @@ add_library(LIBLEVELDB_INT STATIC ${LIBLEVELDB_INT_SRCS})
 add_library(LIBLEVELDB_SSE42 STATIC ${LIBLEVELDB_SSE42_SRCS})
 add_library(LIBMEMENV STATIC ${LIBMEMENV_SRCS})
 add_library(LIBSECP256K1 ${BITCOIN_ROOT_DIR}/src/secp256k1/src/secp256k1.c)
-# add_executable(BITCOIND BITCOIND_OBJ_SRC
-# add_library(LIBUNIVALUE 
+
 
 
 SET(GCC_DEFS "-DHAVE_CONFIG_H")
-# SET(DEFAULT_INCLUDES "-I${BITCOIN_ROOT_DIR}/src -I${BITCOIN_ROOT_DIR}/src/config")
 SET(AM_CPPFLAGS "-U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2")
 SET(BOOST_CPPFLAGS "-DBOOST_SP_USE_STD_ATOMIC -DBOOST_AC_USE_STD_ATOMIC -pthread -I/usr/include -DBOOST_NO_SCOPED_ENUMS -DBOOST_NO_CXX11_SCOPED_ENUMS")
 SET(LEVELDB_CPPFLAGS "-I${BITCOIN_ROOT_DIR}/src/leveldb/include -I${BITCOIN_ROOT_DIR}/src/leveldb/helpers/memenv")
@@ -226,7 +231,8 @@ SET(EVENT_PTHREADS_CFLAGS "-pthread")
 SET(CPPFLAGS "-DHAVE_BUILD_INFO -D__STDC_FORMAT_MACROS")
 SET(AM_CXXFLAGS "-Wstack-protector -fstack-protector-all")
 SET(PIE_FLAGS "-fPIE")
-SET(CXXFLAGS "-g -O2 -Wall -Wextra -Wformat -Wvla -Wformat-security -Wno-unused-parameter")
+# SET(CXXFLAGS "-g -O2 -Wall -Wextra -Wformat -Wvla -Wformat-security -Wno-unused-parameter")
+SET(CXXFLAGS "-g -Wall -Wextra -Wformat -Wvla -Wformat-security -Wno-unused-parameter")
 SET(LIBBITCOIN_SERVER_CPPFLAGS "${GCC_DEFS} ${AM_CPPFLAGS} ${BITCOIN_INCLUDES} ${EVENT_PTHREADS_CFLAGS} ${CPPFLAGS} ${AM_CXXFLAGS} ${PIE_FLAGS} ${CXXFLAGS}")
 
 SET(LEVELDB_CPPFLAGS_INT "-I${BITCOIN_ROOT_DIR}/src/leveldb -DOS_LINUX -DLEVELDB_ATOMIC_PRESENT -D__STDC_LIMIT_MACROS -DLEVELDB_PLATFORM_POSIX")
@@ -247,9 +253,14 @@ set_target_properties(LIBSECP256K1 PROPERTIES COMPILE_FLAGS "${GCC_DEFS} ${LIBSE
 
 SET(BITCOIN_LDFLAGS "-pthread -Wl,-z,relro -Wl,-z,now -pie")
 
-add_executable(BITCOIND ${BITCOIN_ROOT_DIR}/src/bitcoind.cpp)
+# add_executable(BITCOIND ${BITCOIN_ROOT_DIR}/src/bitcoind.cpp)
+add_shadow_plugin(BITCOIND ${BITCOIN_ROOT_DIR}/src/bitcoind.cpp)
+install(TARGETS BITCOIND DESTINATION plugins)
 
 set_target_properties(BITCOIND PROPERTIES COMPILE_FLAGS "${GCC_DEFS} ${CPPFLAGS} ${CXXFLAGS} ${AM_CPPFLAGS} ${BITCOIN_INCLUDES} ${AM_CXXFLAGS} ${PIE_FLAGS}")
+
+set(OPENSSL_LIBRARIES "/home/csrc/.shadow/lib/libssl.so;/home/csrc/.shadow/lib/libcrypto.so")
+link_directories(${SHADOW_ROOT}/lib/)
 target_link_libraries(BITCOIND ${AM_CXXFLAGS} ${PIE_FLAGS} ${CXXFLAGS} ${BITCOIN_LDFLAGS})
 target_link_libraries(BITCOIND LIBBITCOIN_SERVER LIBBITCOIN_COMMON LIBUNIVALUE LIBBITCOIN_UTIL LIBBITCOIN_CONSENSUS LIBBITCOIN_CRYPTO)
 target_link_libraries(BITCOIND ${Boost_LIBRARIES} ${OPENSSL_LIBRARIES})
@@ -258,14 +269,6 @@ target_link_libraries(BITCOIND -levent_pthreads -levent)
 
 
 
-
-# add_definitions(-std=c++11)
-# add_definitions(-DCLIENT_VERSION_BUILD=0)
-# add_definitions(-DCLIENT_VERSION_IS_RELEASE=true)
-# add_definitions(-DCLIENT_VERSION_MAJOR=0)
-# add_definitions(-DCLIENT_VERSION_MINOR=16)
-# add_definitions(-DCLIENT_VERSION_REVISION=0)
-# add_definitions(-DCOPYRIGHT_YEAR=2018)
 
 
 

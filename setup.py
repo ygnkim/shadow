@@ -36,18 +36,31 @@ def setup_bitcoin():
     os.system("cd %s; ./autogen.sh; ./configure --disable-wallet; make -C src obj/build.h; make -C src/secp256k1 src/ecmult_static_context.h"% bitcoin_path)
     
 
-def compile_bitcoin():
+def compile_bitcoin_plugin():
     build_path = "plugins/bitcoin/build"
     if not os.path.exists(build_path):
         os.system("mkdir -p %s" % build_path)
 
-    os.system("cd %s; cmake ../; make" % build_path)
+    bitcoin_path = "plugins/bitcoin/src/bitcoin"
+    if not os.path.exists("plugins/bitcoin/DisableSanityCheck.patch"):
+        print "No appropriate patch exists"
+        exit(1)
+    else:
+        os.system("cd %s; git apply ../../DisableSanityCheck.patch" % bitcoin_path)
 
+    os.system("cd %s; cmake ../; make; make install" % build_path)
+
+def run_shadow_bitcoin_example():
+    run_path = "plugins/bitcoin"
+    os.system("mkdir %s/node1data; mkdir %s/node2data;" % (run_path, run_path))
+    os.system("cd %s; shadow example.xml" % run_path)
+    
 if __name__ == '__main__':
     # setup_shadow()
     # os.system("echo 'export PATH=$PATH:%s' >> ~/.bashrc && . ~/.bashrc" % os.path.expanduser("~/.shadow/bin"))
 
-    setup_bitcoin()
-    compile_bitcoin()
+    # setup_bitcoin()
+    compile_bitcoin_plugin()
+    run_shadow_bitcoin_example()
 
     
