@@ -33,24 +33,18 @@
 
   <!-- the plug-ins we will be using -->
   <plugin id="bitcoind" path="libBITCOIND.so" />
-  <plugin id="hello" path="libshadow-plugin-hello.so" />
-  <!-- <plugin id="bitcoind" path="libshadow-plugin-bitcoind.so" /> -->
 
   <!-- the length of our experiment in seconds  1404101800-->
   <kill time="120" />
   <!-- our nodes -->
 
   <node id="bcdnode1">
-    <!-- <application plugin="bitcoind" time="10" arguments="" /> -->
     <application plugin="bitcoind" time="13" arguments="-datadir=./node1data -debug -printtoconsole -connect=bcdnode2 -listen -disablewallet=1 -server=0" />
-    <!-- <application plugin="bitcoind" time="13" arguments="-datadir=data/bcdnode1 -debug -printtoconsole -connect=bcdnode2 -listen -par=1 -server=1 -rpcpassword=4J7YUKgRHd8hUWp14e233pwmkPtbnQ2cUS4PMxiy1J6z -checkblocks=1 -disablewallet=1" /> -->
   </node>
 
 
   <node id="bcdnode2">
-    <!-- <application plugin="hello" time="20" arguments="" /> -->
     <application plugin="bitcoind" time="13" arguments="-datadir=./node2data -debug -printtoconsole -listen -connect=bcdnode1 -disablewallet=1 -server=0"/>
-    <!-- <application plugin="bitcoind" time="13" arguments="-datadir=data/bcdnode2 -debug -printtoconsole -listen -connect=bcdnode1 -par=1 -server=0 -rpcpassword=4J7YUKgRHd8hUWp14e233pwmkPtbnQ2cUS4PMxiy1J6z -checkblocks=1 -disablewallet=1" /> -->
   </node>
 
 </shadow>
