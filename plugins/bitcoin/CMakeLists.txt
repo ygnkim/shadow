@@ -259,7 +259,7 @@ install(TARGETS BITCOIND DESTINATION plugins)
 
 set_target_properties(BITCOIND PROPERTIES COMPILE_FLAGS "${GCC_DEFS} ${CPPFLAGS} ${CXXFLAGS} ${AM_CPPFLAGS} ${BITCOIN_INCLUDES} ${AM_CXXFLAGS} ${PIE_FLAGS}")
 
-set(OPENSSL_LIBRARIES "/home/csrc/.shadow/lib/libssl.so;/home/csrc/.shadow/lib/libcrypto.so")
+# set(OPENSSL_LIBRARIES "/home/csrc/.shadow/lib/libssl.so;/home/csrc/.shadow/lib/libcrypto.so")
 link_directories(${SHADOW_ROOT}/lib/)
 target_link_libraries(BITCOIND ${AM_CXXFLAGS} ${PIE_FLAGS} ${CXXFLAGS} ${BITCOIN_LDFLAGS})
 target_link_libraries(BITCOIND LIBBITCOIN_SERVER LIBBITCOIN_COMMON LIBUNIVALUE LIBBITCOIN_UTIL LIBBITCOIN_CONSENSUS LIBBITCOIN_CRYPTO)

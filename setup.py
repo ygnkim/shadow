@@ -7,23 +7,26 @@ def setup_shadow():
         print "Shadow simulator is already installed"
     else:
         print "Installing..."
-        os.system("sudo apt-get install -y gcc g++ libglib2.0-0 libglib2.0-dev libigraph0 libigraph0-dev cmake make xz-utils")
         os.system("sudo apt-get install libc-dbg")
         os.system("sudo apt-get install -y python python-matplotlib python-numpy python-scipy python-networkx python-lxml")
         os.system("sudo apt-get install -y git dstat screen htop")
 
         if "Ubuntu 14.04" in check_output(["bash", "-c", "cat /etc/lsb-release | grep DESCRIPTION"]):
+            os.system("sudo apt-get install -y gcc g++ libglib2.0-0 libglib2.0-dev libigraph0 libigraph0-dev cmake make xz-utils")
             print "Installing glib manually..."
             os.system("wget http://ftp.gnome.org/pub/gnome/sources/glib/2.42/glib-2.42.1.tar.xz")
             os.system("tar xaf glib-2.42.1.tar.xz")
             os.system("cd glib-2.42.1; ./configure --prefix=%s; make; make install" % os.path.expanduser("~/.shadow"))
+        else:
+            os.system("sudo apt-get install -y gcc g++ libglib2.0-0 libglib2.0-dev libigraph0v5 libigraph0-dev cmake make xz-utils")
 
         
         if not os.path.exists("./shadow"):
             os.system("git clone https://github.com/shadow/shadow.git")
         os.system("cd shadow; ./setup build --clean --debug --test")
-        os.system("cd shadow; ./setup install")
         os.system("cd shadow; ./setup test")
+        os.system("cd shadow; ./setup install")
+
     
 
 def setup_bitcoin():
@@ -31,6 +34,8 @@ def setup_bitcoin():
     if not os.path.exists(bitcoin_path):
         os.system("mkdir -p %s" % bitcoin_path)
         os.system("git clone https://github.com/bitcoin/bitcoin.git %s" % bitcoin_path)
+
+    os.system("sudo apt-get install -y autoconf libtool libboost-all-dev libssl-dev libevent-dev")
     
     os.system("git -C %s checkout ." % bitcoin_path)
     os.system("git -C %s checkout v0.16.0" % bitcoin_path)
@@ -93,11 +98,11 @@ if __name__ == '__main__':
     # os.system("echo 'export PATH=$PATH:%s' >> ~/.bashrc && . ~/.bashrc" % os.path.expanduser("~/.shadow/bin"))
 
     # setup_bitcoin()
-    # compile_bitcoin_plugin()
+    compile_bitcoin_plugin()
 
 
-    setup_multiple_node_xml(100)
-    # run_shadow_bitcoin_example()
-    run_shadow_bitcoin_multiple_node(100)
+    # setup_multiple_node_xml(100)
+    run_shadow_bitcoin_example()
+    # run_shadow_bitcoin_multiple_node(100)
 
     
