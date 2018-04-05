@@ -9,7 +9,7 @@ def setup_shadow():
         print "Installing..."
         os.system("sudo apt-get install libc-dbg")
         os.system("sudo apt-get install -y python python-matplotlib python-numpy python-scipy python-networkx python-lxml")
-        os.system("sudo apt-get install -y git dstat screen htop")
+        os.system("sudo apt-get install -y git dstat screen htop libffi-dev")
 
         if "Ubuntu 14.04" in check_output(["bash", "-c", "cat /etc/lsb-release | grep DESCRIPTION"]):
             os.system("sudo apt-get install -y gcc g++ libglib2.0-0 libglib2.0-dev libigraph0 libigraph0-dev cmake make xz-utils")
@@ -91,6 +91,7 @@ def run_shadow_bitcoin_multiple_node(node_num):
     os.system("rm -rf %s/node*data" % run_path)
     for i in range(node_num):
         os.system("mkdir %s/node%ddata" % (run_path, i))
+    os.system("mkdir %s/shadow.result" % run_path)
     os.system("cd %s; shadow %s | tee shadow.result/shadow_%d.result" % (run_path,"example_multiple_generated.xml", node_num))
 
 if __name__ == '__main__':
@@ -98,11 +99,11 @@ if __name__ == '__main__':
     # os.system("echo 'export PATH=$PATH:%s' >> ~/.bashrc && . ~/.bashrc" % os.path.expanduser("~/.shadow/bin"))
 
     # setup_bitcoin()
-    compile_bitcoin_plugin()
+    # compile_bitcoin_plugin()
 
 
-    # setup_multiple_node_xml(100)
     run_shadow_bitcoin_example()
+    # setup_multiple_node_xml(100)
     # run_shadow_bitcoin_multiple_node(100)
 
     
